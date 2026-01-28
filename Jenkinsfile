@@ -2,15 +2,9 @@ pipeline {
     agent any
 
     stages {
-        stage('Clone Code') {
-            steps {
-                git 'https://github.com/Bhavin-0621/jenkins-demo-project.git'
-            }
-        }
-
         stage('Build') {
             steps {
-                echo 'Build stage completed'
+                echo 'Build completed'
             }
         }
 
@@ -24,14 +18,18 @@ pipeline {
 
     post {
         success {
-            mail to: 'your-email@gmail.com',
-                 subject: 'Jenkins Build SUCCESS',
-                 body: 'Deployment completed successfully.'
+            emailext(
+                to: 'bhavinpanchal33@gmail.com',
+                subject: "SUCCESS: ${JOB_NAME} #${BUILD_NUMBER}",
+                body: "Build Successful\nJob: ${JOB_NAME}\nBuild: ${BUILD_NUMBER}"
+            )
         }
         failure {
-            mail to: 'your-email@gmail.com',
-                 subject: 'Jenkins Build FAILED',
-                 body: 'Build or deployment failed. Please check Jenkins logs.'
+            emailext(
+                to: 'bhavinpanchal33@gmail.com',
+                subject: "FAILED: ${JOB_NAME} #${BUILD_NUMBER}",
+                body: "Build Failed\nJob: ${JOB_NAME}\nBuild: ${BUILD_NUMBER}"
+            )
         }
     }
 }
